@@ -1,0 +1,39 @@
+{% load static %}
+<link rel="stylesheet" href="{% static "core/css/bootstrap.css" %}">
+<script src="{% static "core/js/jquery.js" %}"></script>
+<script src="{% static "core/js/main.js" %}"></script>
+
+{% block title %}Task List{% endblock %}
+
+{% block content %}
+    <h2>Task List</h2>
+    <a class="btn btn-default" href="{% url 'task_add' %}">Add</a>
+    <a class="btn btn-default" href="{% url 'task_list' %}?hide_completed=true">Hide Completed tasks</a>
+
+    <table class="table">
+        {% for task in tasks %}
+            <tr>
+                <td>
+                    {{ task.name }}
+                </td>
+                <td>
+                    {{ task.user.username }}
+                </td>
+                <td>
+                    {% if task.user == request.user %}
+                        <a class="btn btn-default" href="{% url 'task_modify' task_id=task.id %}">Edit</a>
+                    {% endif %}
+                </td>
+                <td>
+                    {% if task.user == request.user %}
+                        <button class="btn delete" data-url="{% url 'task_modify' task_id=task.id %}">Delete</button>
+                    {% endif %}
+                </td>
+                <td>
+                    <button class="btn done" data-url="{% url 'task_modify' task_id=task.id %}">Make Done</button>
+                </td>
+            </tr>
+        {% endfor %}
+    </table>
+    <p class="bg-info" id="infobar" hide></p>
+{% endblock %}
